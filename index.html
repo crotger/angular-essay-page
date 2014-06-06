@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app="crudApp">
+<head>
+	<title>Angular Essay Test</title>
+	<!-- Angular.js -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+	
+	<!-- Libraries for markdown element -->
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.js"></script>
+	<script type="text/javascript" src="showdown.js"></script>
+
+	<!-- Appication logic -->
+	<script type="text/javascript" src="app.js"></script>
+
+	<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"/>
+</head>
+<body class="container" style="max-width: 800px;">
+
+<h1>
+Essay Viewing Page
+</h1>
+
+<div ng-controller="EssayController as essay">
+	<h1>{{essay.e.title}}</h1>
+	<h3><em>By {{essay.e.author}}</em></h3>
+	
+	<div class="col-md-12" style="padding:20px;" ng-repeat="p in essay.e.contents" ng-controller="ParagraphFormController as pCtrl" ng-mouseenter="pCtrl.showButton()" ng-mouseleave="pCtrl.hideButton()">
+		<div class="col-md-8" markdown="p.body"></div>
+
+		<button class="btn btn-primary btn-md" href ng-click="pCtrl.showForm()" ng-show="pCtrl.button && !pCtrl.form">Edit</button><button class="btn btn-primary btn-md" href ng-click="essay.addParagraph($index)" ng-show="pCtrl.button && !pCtrl.form">Insert Paragraph</button><br/>
+
+		<form ng-submit="essay.updateContent(); essay.updateShowForm($index); pCtrl.hideForm()" ng-show="pCtrl.shouldShow(p.show_form_default)">
+			<textarea cols="80" rows="10" ng-model="p.body" name="paragraph"></textarea>
+			<br/>
+			<input class="btn btn-success btn-lg" type="submit" value="Save"/>
+			<button class="btn btn-danger btn-lg" ng-click="essay.deleteParagraph($index)">Delete</button>
+		</form>
+
+	</div>
+	<br/><br/>
+	<div style="padding:30px" class="col-md-12">
+		<button class="btn btn-warning btn-lg center-block" href ng-click="essay.addParagraph(-1)">Add New Paragraph</button>
+	</div>
+</div>
+</body>
+</html>
